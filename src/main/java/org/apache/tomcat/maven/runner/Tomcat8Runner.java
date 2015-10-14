@@ -113,6 +113,14 @@ public class Tomcat8Runner {
 
   public String httpProtocol;
 
+  public String proxyName;
+
+  public int proxyPort;
+
+  public String scheme = "http";
+
+  public boolean secure = false;
+
   public String extractDirectory = ".extract";
 
   public File extractDirectoryFile;
@@ -283,6 +291,11 @@ public class Tomcat8Runner {
         }
         connector.setURIEncoding(uriEncoding);
 
+        connector.setProxyName(proxyName);
+        connector.setProxyPort(proxyPort);
+        connector.setScheme(scheme);
+        connector.setSecure(secure);
+
         tomcat.getService().addConnector(connector);
 
         tomcat.setConnector(connector);
@@ -425,6 +438,22 @@ public class Tomcat8Runner {
     }
     if (System.getProperty("maxPostSize") == null) {
       System.setProperty("maxPostSize", Integer.toString(maxPostSize));
+    }
+    if (System.getProperty("proxyName") == null) {
+      if (proxyName != null) {
+        System.setProperty("proxyName", proxyName);
+      }
+    }
+    if (System.getProperty("proxyPort") == null) {
+      if (proxyPort > 0) {
+        System.setProperty("proxyPort", Integer.toString(proxyPort));
+      }
+    }
+    if (System.getProperty("scheme") == null) {
+      System.setProperty("scheme", scheme);
+    }
+    if (System.getProperty("secure") == null) {
+      System.setProperty("secure", Boolean.toString(secure));
     }
     if (System.getProperty("sessionManagerFactoryClassName") == null) {
       if (sessionManagerFactoryClassName != null) {

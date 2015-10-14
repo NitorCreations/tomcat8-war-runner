@@ -74,6 +74,17 @@ public class Tomcat8RunnerCli {
   static Option httpProtocol = OptionBuilder.withArgName("httpProtocol").hasArg()
       .withDescription("http protocol to use: HTTP/1.1 or org.apache.coyote.http11.Http11NioProtocol").create("httpProtocol");
 
+  static Option proxyName = OptionBuilder.withArgName("proxyName").hasArg()
+      .withDescription("pretend requests are coming to this hostname").create("proxyName");
+
+  static Option proxyPort = OptionBuilder.withArgName("proxyPort").hasArg()
+      .withDescription("pretend requests are coming to this port").create("proxyPort");
+
+  static Option scheme = OptionBuilder.withArgName("scheme").hasArg()
+      .withDescription("scheme to use: http or https").create("scheme");
+
+  static Option secure = OptionBuilder.withLongOpt("secure").withDescription("if requests are considered secure (should be used with scheme https)").create("s");
+
   static Option extractDirectory = OptionBuilder.withArgName("extractDirectory").hasArg()
       .withDescription("path to extract war content, default value: .extract").create("extractDirectory");
 
@@ -98,6 +109,10 @@ public class Tomcat8RunnerCli {
         .addOption(debug) //
         .addOption(sysProps) //
         .addOption(httpProtocol) //
+        .addOption(proxyName) //
+        .addOption(proxyPort) //
+        .addOption(scheme) //
+        .addOption(secure) //
         .addOption(clientAuth) //
         .addOption(keyAlias) //
         .addOption(obfuscate) //
@@ -173,6 +188,18 @@ public class Tomcat8RunnerCli {
 
     if (line.hasOption(httpProtocol.getOpt())) {
       tomcat8Runner.httpProtocol = line.getOptionValue(httpProtocol.getOpt());
+    }
+    if (line.hasOption(proxyName.getOpt())) {
+      tomcat8Runner.proxyName = line.getOptionValue(proxyName.getOpt());
+    }
+    if (line.hasOption(proxyPort.getOpt())) {
+      tomcat8Runner.proxyPort = Integer.parseInt(line.getOptionValue(proxyPort.getOpt()));
+    }
+    if (line.hasOption(scheme.getOpt())) {
+      tomcat8Runner.scheme = line.getOptionValue(scheme.getOpt());
+    }
+    if (line.hasOption(secure.getOpt())) {
+      tomcat8Runner.secure = true;
     }
 
     if (line.hasOption(sysProps.getOpt())) {
