@@ -119,6 +119,8 @@ public class Tomcat8Runner {
 
   public String scheme = "http";
 
+  public String accessLogDirectory;
+
   public boolean secure = false;
 
   public String extractDirectory = ".extract";
@@ -311,7 +313,7 @@ public class Tomcat8Runner {
 
       // add a default access log valve
       AccessLogValve alv = new AccessLogValve();
-      alv.setDirectory(new File(extractDirectory, "logs").getAbsolutePath());
+      alv.setDirectory(accessLogDirectory != null ? accessLogDirectory : new File(extractDirectory, "logs").getAbsolutePath());
       alv.setPattern(runtimeProperties.getProperty(Tomcat8Runner.ACCESS_LOG_VALVE_FORMAT_KEY));
       tomcat.getHost().getPipeline().addValve(alv);
 
@@ -464,6 +466,13 @@ public class Tomcat8Runner {
     }
     if (System.getProperty("uriEncoding") == null) {
       System.setProperty("uriEncoding", uriEncoding);
+    }
+    if (System.getProperty("accessLogDirectory") == null) {
+      if (accessLogDirectory != null) {
+        System.setProperty("accessLogDirectory", accessLogDirectory);
+      } else {
+        System.setProperty("accessLogDirectory", "logs");
+      }
     }
   }
 

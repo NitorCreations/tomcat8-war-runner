@@ -97,6 +97,9 @@ public class Tomcat8RunnerCli {
   static Option uriEncoding = OptionBuilder.withArgName("uriEncoding").hasArg().withDescription("connector uriEncoding default ISO-8859-1")
       .create("uriEncoding");
 
+  static Option accessLogDirectory = OptionBuilder.withArgName("accessLogDirectory").hasArg()
+      .withDescription("directory for access log files").create("accessLogDirectory");
+
   static Options options = new Options();
 
   static {
@@ -120,6 +123,7 @@ public class Tomcat8RunnerCli {
         .addOption(sessionManagerFactoryClassName) //
         .addOption(loggerName) //
         .addOption(uriEncoding) //
+        .addOption(accessLogDirectory) //
         .addOption(maxPostSize);
   }
 
@@ -231,6 +235,10 @@ public class Tomcat8RunnerCli {
 
     if (line.hasOption(uriEncoding.getOpt())) {
       tomcat8Runner.uriEncoding = line.getOptionValue(uriEncoding.getOpt());
+    }
+
+    if (line.hasOption(accessLogDirectory.getOpt())) {
+      tomcat8Runner.accessLogDirectory = line.getOptionValue(accessLogDirectory.getOpt());
     }
 
     // here we go
