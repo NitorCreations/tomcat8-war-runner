@@ -6,21 +6,12 @@ Currently there exists no Tomcat 8 version of Tomcat Maven plugin. Exec-wars bui
 
 In addition to fixing the issue with `server.xml`, this runner sets the [exec-war parameters affecting Tomcat configuration to system properties](http://tomcat.apache.org/maven-plugin-2.0/executable-war-jar.html#Generated_executable_jarwar), when a custom `server.xml` is detected. This enables you to refer them in the custom `server.xml` and smoothly switch between having and not having a custom `server.xml`.
 
+The runner also adds more options to command line configuration.
+
 ## Usage
 
-This runner has not (yet) been published to Maven Central, so currently you need to create a local repository under your web project.
+The runner is published to Maven Central, so just add it as extra dependency for tomcat7-maven-plugin.
 
-* Clone and build this repository (`mvn package`)
-* Create directory `lib/com/nitorcreations/tomcat8-war-runner/1.0-SNAPSHOT` under your web project. Copy `target/tomcat8-war-runner-1.0-SNAPSHOT.jar` from the previous step to the new directory.
-* Setup local repository pointing to the created directory in you web project `pom.xml`:
-```
-<repositories>
-  <repository>
-    <id>lib_id</id>
-    <url>file://${project.basedir}/lib</url>
-  </repository>
-</repositories>
-```
 * Configure you tomcat7-maven-plugin to use this runner in your web project `pom.xml`:
 ```
 <plugin>
@@ -36,7 +27,7 @@ This runner has not (yet) been published to Maven Central, so currently you need
           <extraDependency>
             <groupId>com.nitorcreations</groupId>
             <artifactId>tomcat8-war-runner</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
           </extraDependency>
         </extraDependencies>
       </configuration>
@@ -64,4 +55,44 @@ This runner has not (yet) been published to Maven Central, so currently you need
 * After rebuilding your web project, you can run and configure your `app-webapp-1.0-SNAPSHOT-war-exec.jar` by mixing default Tomcat Maven plugin parameters (httpPort) and/or system properties (maxThreads) depending on your needs. (System properties take precedence over default Tomcat Maven plugin parameters, if both are defined.)
 ```
 java -DmaxThreads=300 -jar app-webapp-1.0-SNAPSHOT-war-exec.jar -httpPort 9999
+```
+* Supported command line parameters:
+```
+usage: java -jar [path to your exec war jar]
+ -accessLogDirectory <accessLogDirectory>   directory for access log files
+ -ajpPort <ajpPort>                         ajp port to use
+ -clientAuth                                enable client authentication
+                                            for https
+ -D <arg>                                   key=value
+ -extractDirectory <extractDirectory>       path to extract war content,
+                                            default value: .extract
+ -h,--help                                  help
+ -httpPort <httpPort>                       http port to use
+ -httpProtocol <httpProtocol>               http protocol to use: HTTP/1.1
+                                            or
+                                            org.apache.coyote.http11.Http1
+                                            1NioProtocol
+ -httpsPort <httpsPort>                     https port to use
+ -keyAlias <keyAlias>                       alias from keystore for ssl
+ -loggerName <loggerName>                   logger to use: slf4j to use
+                                            slf4j bridge on top of jul
+ -maxPostSize <maxPostSize>                 max post size to use
+ -obfuscate <password>                      obfuscate the password and
+                                            exit
+ -proxyName <proxyName>                     pretend requests are coming to
+                                            this hostname
+ -proxyPort <proxyPort>                     pretend requests are coming to
+                                            this port
+ -resetExtract                              clean previous extract
+                                            directory
+ -s,--secure                                if requests are considered
+                                            secure (should be used with
+                                            scheme https)
+ -scheme <scheme>                           scheme to use: http or https
+ -serverXmlPath <serverXmlPath>             server.xml to use, optional
+ -sessionManagerFactory <className>         classname of a factory that
+                                            creates a session manager
+ -uriEncoding <uriEncoding>                 connector uriEncoding default
+                                            ISO-8859-1
+ -X,--debug                                 debug
 ```
